@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Elastic</title>
+</head>
+<body>
+<h1>Instrucciones<h1>
+<h2>Arrastra el cuadrado rojo hacias abajo y luego sueltalo.</h2>
+<h2>Entre mas arrastres el cuadrado hacia abajo mas fuerza imprimiras</h2>
+<canvas id="lienzo" width="500" height="200"  ></canvas>
+
+<script type="text/javascript">
+    var canvas = document.getElementById('lienzo')//call element
+  ,   ctx = canvas.getContext("2d") //context
+  ,   FTP = 60 //fotogramas por segundo
+  ,   Fy = 0;//Fuerza en Y
+
+  var Cords = {
+    incio:{x:100,y:100},
+    final:{x:400,y:100},
+    control:{x:(100+400)/2, y:101,width:30,height:30,color:'red'}
+  };//from bezierCurveTo
+
+  ctx.save();
+  var Play = setInterval(function(){
+    Clear();
+    Grilla();
+    Arco(Cords);
+    DragPoint(Cords);
+    Update();
+  },1000/FTP);
+
+  function Update() {
+    if(Fy > 0){
+      Fy-=0.3;
+      Cords.control.y = (Math.sin(Fy)*Fy)+101;
+    };
+  };//Update variable
+
+  function DragPoint(data){
+    canvas.onmousedown = function(e) {
+      var Dx = (e.clientX-canvas.offsetLeft);//Down position X
+      var Dy = (e.clientY-canvas.offsetTop);//Down position y
+
+      var ancho= Dx >= data.control.x && Dx <= data.control.x+data.control.width;
+      var alto = Dy >= data.control.y && Dy <= data.control.y+data.control.height;
+
+      if(ancho && alto && Fy <= 0){
+        //Drag inside the referens rect
+        console.log("inside");
+        canvas.style.cursor = "pointer";
+        Cords.control.color = "green";
+        this.onmousemove = function(e){
+          var Mx = (e.clientX-canvas.offsetLeft);//Move position X
+          var My = (e.clientY-canvas.offsetTop);//Move position y
+          Cords.control.x = Mx-(Cords.control.width/2);
+          Cords.control.y = My-(Cords.control.height/2);
+          console.log("moving");
+        };
+        this.onmouseup = function(e){
+          canvas.style.cursor = "default";
+          Cords.control.color = "red";
+          console.log("stop");
+          var Sx = (e.clientX-canvas.offsetLeft);//Stop position X
+          var Sy = (e.clientY-canvas.offsetTop);//Stop position y
+          var Sancho= Sx >= data.control.x && Sx <= data.control.x+data.control.width;
+          var Salto = Sy >= data.control.y && Sy <= data.control.y+data.control.height;
+          if(Sancho && Salto){
+            Fy+= Math.abs(Sy-Cords.incio.y);
+          }
+          this.onmousemove = null;//kill the event move when this event happend
+        };
+
+      }else{
+        canvas.style.cursor = "default";
+        Cords.control.color = "red"
+      };//Drag out the referens rect
+    }//end down
+  };//End drag and drop referens point
+
+  function Arco(data) {
+    ctx.restore();
+    ctx.beginPath();
+    ctx.lineCap ="round";
+    ctx.moveTo(data.incio.x,data.incio.y);
+    ctx.lineTo(data.control.x+data.control.width/2,data.control.y+data.control.height/2);
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.closePath();//Hilo de tencio izquierdo
+
+    ctx.beginPath();
+    ctx.lineCap ="round";
+    ctx.moveTo(data.final.x,data.final.y);
+    ctx.lineTo(data.control.x+(data.control.width/2),data.control.y+(data.control.height/2));
+    ctx.strokeStyle = "red";
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.closePath();//Hilo de tencio derecho
+
+    ctx.beginPath();
+    ctx.bezierCurveTo(data.incio.x,data.incio.y,data.control.x,data.control.y,data.final.x,data.final.y);
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = "green";
+    ctx.lineCap ="round";
+    ctx.stroke();
+    ctx.closePath();//dibuja arco
+
+    ctx.beginPath();
+    ctx.fillStyle = data.control.color;
+    ctx.fillRect(data.control.x,data.control.y,data.control.width,data.control.height);
+    ctx.closePath();//cuadrado de referencia
+  };//End Arco
+
+
+  function Clear() {
+    canvas.width = canvas.width;
+  };
+  function Grilla() {
+    ctx.restore();
+    var ancho = canvas.width;
+    var alto = canvas.height;
+    var padding = 25;
+    for( var column = 1;column< ancho/padding; column++ ){
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.moveTo(column*padding,0);
+      ctx.lineTo(column*padding,alto);
+      ctx.stroke();
+      ctx.closePath();
+    };//column
+
+    for( var row = 1;row< alto/padding; row++ ){
+      ctx.beginPath();
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.moveTo(0,row*padding);
+      ctx.lineTo(ancho,row*padding);
+      ctx.stroke();
+      ctx.closePath();
+    };//row
+  };//draw grid
+
+
+</script>
+
+</body>
+</html>
