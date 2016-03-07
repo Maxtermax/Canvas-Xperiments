@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Queue</title>
+</head>
+<body>
+  <h1>Presiona cualquier tecla para imprimir fuerza a la cola.</h1>
+  <canvas id="lienzo" width="500"  height="300"></canvas>
+  <h2>Si mantienes la tecla precionada imprimiras mas fuerza.</h2>
+  <script type="text/javascript">
+      var canvas = document.getElementById("lienzo");// seccionamos y cacheamos la etiqueta canvas por medio de su identificador y lo guardamos en una variable que llamaremos canvas
+
+  var ctx = canvas.getContext("2d");// Obtenemos el contexto en el que queremos dibujar en este caso es en 2d y lo guardamos en la variable ctx
+
+  function grilla(){
+    var padding = 25;
+
+    for( var colum = 1; colum < canvas.width/padding ;colum++ ){
+      ctx.beginPath();// Indicamos que vamos a comenzar un dibujo
+      ctx.moveTo( colum*padding, 0);//movemos el lapiz al punto necesario
+      ctx.strokeStyle = "rgba(0,0,0,0.5)";//modificamos un el color de la linea
+      ctx.lineTo( colum*padding,canvas.height); // llevamos el trazo hasta las coordernadas necesaria en y
+      ctx.stroke();// trazamos el camino
+      ctx.closePath();// Indicamos que terminamos el dibujo
+    };
+
+    for( var rows = 1; rows < canvas.height/padding ;rows++ ){
+      ctx.beginPath();// Indicamos que vamos a comenzar un dibujo
+      ctx.moveTo( 0,rows*padding);//movemos el lapiz al punto necesario
+      ctx.strokeStyle = "rgba(0,0,0,1)";//modificamos un el color de la linea
+      ctx.lineTo(canvas.width,rows*padding);// llevamos el trazo hasta las coordernadas necesaria en y
+      ctx.stroke();// trazamos el camino
+      ctx.closePath();// Indicamos que terminamos el dibujo
+   };//Filas
+  };//Funcion Grilla
+
+  function Latigo(ctx,x,y,ancho,alto,fuerza){
+    ctx.translate(x,y);
+    ctx.rotate(angulo*Math.PI/180);
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(0,0,ancho,alto);
+  //dos
+  ctx.translate(ancho,alto);
+  ctx.rotate(angulo*Math.PI/180);
+  ctx.fillStyle = "red";
+  ctx.fillRect(0,0,ancho,alto);
+  //tres
+  ctx.translate(ancho,alto);
+  ctx.rotate(angulo*Math.PI/180);
+  ctx.fillStyle = "green";
+  ctx.fillRect(0,0,ancho,alto);
+  //cuatro
+  ctx.translate(ancho,alto);
+  ctx.rotate(angulo*Math.PI/180);
+  ctx.fillStyle = "olive";
+  ctx.fillRect(0,0,ancho,alto);
+  angulo = Math.sin(m)*fuerza;
+  };
+
+
+  var m = 1;
+  var angulo = 0;
+  var aumento = 0;
+
+
+
+
+  var g = 1;
+  var deg = 0;
+
+  var Play =  setInterval(function(){
+    canvas.width = canvas.width;
+    //Latigo(ctx,100,100,25,25,90);
+    grilla();
+    ctx.translate(200,40);
+    for(var i = 1;i<10;i++){
+      ctx.translate(0,25);
+      ctx.rotate( deg*( Math.cos(g) )*Math.PI/180);
+      ctx.fillStyle = "#6"+i+(i+1);
+      ctx.fillRect(-25/2,0,25,25);
+    };
+
+    window.onkeydown = function(e) {
+      if(deg < 20) {
+        deg  += 23;
+      };
+    };
+    if(!(deg === 0)) deg-=1;
+    g += 0.2;
+
+  },1000/25);
+
+  </script>
+
+</body>
+</html>
