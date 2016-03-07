@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<canvas id="lienzo" width="400" height="400"></canvas>
+
+	<script>
+		var canvas = document.getElementById("lienzo")
+		,   ctx = canvas.getContext("2d")
+		,   width = canvas.width
+		,   height = canvas.height ;
+
+		var Grid = function (width,height,space,color) {
+		    for (var i = 0; i < width/space; i++) {	
+		        ctx.beginPath()
+		        ctx.strokeStyle = color
+		        if(i == (width/space)/2 ) ctx.strokeStyle = 'black'
+		        ctx.moveTo(0,i*space)
+		        ctx.lineTo(width,i*space)
+		        ctx.stroke()
+		        ctx.closePath()
+		    }//rows 
+		    
+		    for (var j = 0; j < height/space; j++) {	
+		        ctx.beginPath()
+		        ctx.strokeStyle = color
+		        if(j == (height/space)/2 ) ctx.strokeStyle = 'black'
+		        ctx.moveTo(j*space,0)
+		        ctx.lineTo(j*space,height)
+		        ctx.stroke()
+		        ctx.closePath()
+		    }//colums  
+		}//end grid 
+		
+
+		var corazon = function (a) {
+			ctx.beginPath()
+			ctx.translate(height/2,(width/2))
+			ctx.rotate( (Math.PI/180)*180)
+			for (var i = 0; i < a; i+= 0.016) {
+				var pow = Math.pow(Math.sin(i),3)
+				var x = 16*pow;
+				var y = 13*Math.cos(i) -  5*Math.cos(2*i)  - 2*Math.cos(3*i) - Math.cos(4*i) 
+				var rad = 5.1
+
+				ctx.moveTo( x*rad,y*rad)
+				ctx.lineTo( x*(rad+0.2),y*(rad+0.2))
+				ctx.strokeStyle = 'red'
+				ctx.stroke()
+				ctx.closePath()
+			}
+		}//end corazon
+
+//		corazon(10)
+
+		var repeat = 0;
+		setInterval(function() {	
+			canvas.width = canvas.width
+			Grid( width, height ,20,"#ccc")
+			corazon(repeat)
+			repeat += 0.06
+			if(repeat > 7 ) repeat = 0; 
+		},1000/24)
+			
+
+	</script>
+</body>
+</html>
