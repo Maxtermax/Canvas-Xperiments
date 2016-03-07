@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <title></title>
+</head>
+<body>
+<canvas id="lienzo"></canvas>
+<script type="text/javascript">
+      var canvas = document.getElementById('lienzo')
+    var ctx = canvas.getContext('2d')
+    canvas.width = 600
+    canvas.height = 600
+
+    var Grid = function (width,height,space,color) {
+      for (var i = 0; i < width/space; i++) {
+        ctx.beginPath()
+        ctx.strokeStyle = color
+        if(i == (width/space)/2 ) ctx.strokeStyle = 'black'
+        ctx.moveTo(0,i*space)
+        ctx.lineTo(width,i*space)
+        ctx.stroke()
+        ctx.closePath()
+      }//rows
+
+      for (var j = 0; j < height/space; j++) {
+        ctx.beginPath()
+        ctx.strokeStyle = color
+        if(j == (height/space)/2 ) ctx.strokeStyle = 'black'
+        ctx.moveTo(j*space,0)
+        ctx.lineTo(j*space,height)
+        ctx.stroke()
+        ctx.closePath()
+      }//colums
+    }//end grid
+
+
+    var drawCircle = function(x,y,n,top) {
+      ctx.beginPath()
+      ctx.moveTo(x,y)
+      ctx.strokeStyle = "red"
+      for (var i = 1; i < top ; i++) ctx.lineTo(300+Math.sin(i)*n,300+Math.cos(i)*n )
+      ctx.stroke()
+      ctx.closePath()
+    }//end drawCircle
+
+    var width = canvas.width
+    var height = canvas.height
+
+    var t = 0
+    var Play = function() {
+      canvas.width = canvas.width
+      Grid(width,height,25,'#ccc')
+      drawCircle(width/2,height/2,100,t)
+      if(t < 600) {
+        t++
+      }else {
+         t = 0
+      }
+    }//end play
+    setInterval(Play,1000/24)
+
+</script>
+</body>
+</html>
