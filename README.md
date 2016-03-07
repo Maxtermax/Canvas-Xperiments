@@ -10,3 +10,5 @@ This is place to put some canvas xperiments
 * [Elastic movement](http://jsfiddle.net/xy75hnqv/20/)
 
 * [Heart Draw](https://jsfiddle.net/0bdfdjsL)
+
+* [Zoom effect](http://jsfiddle.net/esneyder/zh75qf05/)
