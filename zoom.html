@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Zoom effect</title>
+</head>
+<body>
+<canvas id="lienzo" width='350' height="250"></canvas>
+<h1>Efecto de lupa </h1>
+<h2>Mueve el raton sobre la imagen</h2>
+
+<script type="text/javascript">
+    var canvas =  document.getElementById("lienzo");
+  var ctx = canvas.getContext('2d');
+
+  ctx.font = "20px";
+  ctx.fillText("Cargando...",canvas.width/2,canvas.height/2)
+  var img = new Image();
+  img.src = "http://img3.meristation.com/files/imagenes/general/3ff/sherlockholmescontrajackeldestripador_td.jpg";
+  img.onload = function() {
+    Load();
+    Lupa({zoom:1.08,rad:80});
+  };
+
+  var Load =  function(){
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    ctx.fillStyle = "rgba(0,0,0,0.5)"
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  };
+
+
+  var Lupa = function(data) {
+    canvas.onmousemove =  function(e){
+      canvas.width = canvas.width;
+      ctx.beginPath();
+      Load();
+      ctx.arc(e.x,e.y,data.rad,0,Math.PI*2);
+      ctx.clip();//mascara
+            ctx.fill();
+      ctx.scale( data.zoom,data.zoom );
+      ctx.drawImage(img,0,0,canvas.width,canvas.height);
+      ctx.closePath();
+    }
+  };
+
+
+
+
+</script>
+
+
+</body>
+</html>
